@@ -43,7 +43,7 @@ int main(int argc, char** argv ) {
 
     
     //OPEN BIG BINARY FILE FOR ANALYSIS - open at the end for filelength check
-	ifstream fs;
+    ifstream fs;
     fs.open(s.binfile.c_str(), ios::out | ios::binary | ios::ate);
     //file checks and go back to beginning
     data_check(fs, s);
