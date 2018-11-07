@@ -142,24 +142,6 @@ af::array norm_hist(const af::array &in, float percentage) {
     return out;
 }
 
-// void showImage(af::array in) {
-//    normalizeImageInPlace(in);
-//    saveImageNative("./showImage.tif",in.as(u16));
-//    system("feh showImage.tif &");
-// }
-
-//function to upsample - may be used for other types of coding subpixel registration
-// array pyramid(const array& img, const int level)
-// {
-//     array pyr = img.copy();
-//     for(int i = 0; i < level; i++) {
-//         array tmp = constant(0, pyr.dims(0) * 2, pyr.dims(1) * 2, pyr.dims(2));
-//         tmp(seq(0, 2*pyr.dims(0)-1, 2), seq(0, 2*pyr.dims(1)-1, 2), span) = pyr;
-//         pyr=tmp;
-//     }
-//     return pyr;
-// }
-
 af::array smoothed_disk(int size, int radius, float smooth) {
     if (radius == 0) {
         return af::gaussianKernel( size, size , smooth, smooth);
@@ -214,22 +196,6 @@ af::array smooth(const af::array &in, float smooth, af::array smooths) {
         return smooths3D;
     }
 }
-    
-// array smooth(array a1, float smooth) {
-//     //this function is a wee bit crazy
-//     array a2 = af::gaussianKernel(a1.dims(0),a1.dims(1), smooth, smooth);
-//     //cross correlation with upscale
-//     unsigned int scale = 2;
-//     array A1 = af::fft2(a1,a1.dims(0)*scale,a1.dims(1)*scale);
-//     array A2 = af::fft2(a2,a2.dims(0)*scale,a2.dims(1)*scale);
-//     array ccor_line = af::real(af::ifft2(A1*A2));
-// 	// INVERT QUADRANTS AFTER IFFT
-// 	//ccor_line = shift(ccor_line,ccor_line.dims(0)/2,ccor_line.dims(1)/2);
-//     ccor_line /= float(ccor_line.dims(0))*float(ccor_line.dims(1));
-//     unsigned int l = a1.dims(0)/2*(scale - 1);
-//     unsigned int h = a1.dims(0)/2*(scale + 1) - 1;
-//     return ccor_line(seq(l,h),seq(l,h));
-//     }
     
 af::array smooth1D(const af::array &in, float smooth) {
     af::array gaussian = af::gaussianKernel(in.dims(0),in.dims(0), smooth, smooth);
@@ -589,48 +555,6 @@ af::array get_disks_RANDOM(std::ifstream& fs, DefaultVals s,  unsigned long noFr
     return ar_line_small;
 }
 
-// af::array get_disks_RANDOM(std::ifstream& fs, DefaultVals s,  unsigned long noFrames) {
-//     //calculate size of read out data for the *tmp0 pointer in bytes
-//     long int FRAMELENGTH = s.HEADERSIZE + s.BYTESIZE_DET + s.FOOTERSIZE;
-//     long int LENGTH = noFrames * FRAMELENGTH;
-//     long int DATALENGTH = s.BYTESIZE_DET * noFrames;
-//     char *tmp0 = new char [LENGTH];
-//     char *tmpNoHead = new char [DATALENGTH];
-//   
-//     //stack overflow answer to random number generation
-//     std::mt19937 rng;
-//     rng.seed(std::random_device()());
-//     // distribution to search for random set of frames not over the edge of acquisition
-//     unsigned long limit = s.SCAN_X;
-//     if (limit>s.SCAN_Y) limit = s.SCAN_Y;
-//     std::uniform_int_distribution<std::mt19937::result_type> dist6(0,limit - noFrames); 
-//     
-//     unsigned long rx = dist6(rng);
-//     unsigned long ry = dist6(rng);
-//     //somehow the random number overflows 
-//     while (rx>limit-noFrames) rx = dist6(rng);
-//     while (ry>limit-noFrames) ry = dist6(rng);
-//     
-//     unsigned long newpos = FRAMELENGTH * rx + FRAMELENGTH * ry * s.SCAN_X;
-// 
-//     fs.seekg(newpos, ios::beg);
-// 
-//     fs.read((char*)tmp0, LENGTH);
-//     if (s.endian) endianSwap(s, LENGTH, tmp0);
-// 
-//     //get rid of headers and footers by memcpy 
-//     for (int j = 0; j<noFrames;j++) {
-//         memmove(tmpNoHead + j * s.BYTESIZE_DET , tmp0 + s.HEADERSIZE + j * FRAMELENGTH, s.BYTESIZE_DET );
-//     }
-//     
-//     af::array ar_line = pointerToArray(s, tmpNoHead);
-// 
-//     delete[] tmp0;
-//     delete[] tmpNoHead;  
-//     
-//     return af::resize(ar_line,int(ar_line.dims(0)*1.5),int(ar_line.dims(1)*1.5),AF_INTERP_BILINEAR);
-// }
-
 std::string sConvert (float number)
 {
     std::ostringstream buff;
@@ -741,38 +665,6 @@ af::array generate_edge(DefaultVals s, af::array mask) {
         return af::hypot(A,B); // dogo filter can work but its not better dog(mask,4.0f,1.0f);
     }
 }
-
-// af::array generate_edge(DefaultVals s, af::array mask) {
-//     //edge creation
-//     if (s.DOG) {
-//         array gKerrL = af::gaussianKernel( mask.dims(0), mask.dims(1),s.dogLarge,s.dogLarge);
-//         array gKerrS = af::gaussianKernel( mask.dims(0), mask.dims(1),s.dogSmall,s.dogSmall);
-//         return af::fftConvolve2(gKerrL,mask)-af::fftConvolve2(gKerrS,mask);
-//     }
-//     else{
-//         
-//         //cross correlation with upscale
-//         array gKerr,dx,dy;  
-//         gKerr = af::gaussianKernel( mask.dims(0), mask.dims(1),s.sigma,s.sigma);
-//         grad(dx,dy,gKerr);     
-// 
-//         array MASK = af::fft2(mask,mask.dims(0)*2,mask.dims(1)*2);
-//         array DX = af::fft2(dx,dx.dims(0)*2,dx.dims(1)*2);
-//         array DY = af::fft2(dy,dy.dims(0)*2,dy.dims(1)*2);
-//         array mask_dx = real(ifft2(MASK*DX));
-//         array mask_dy = real(ifft2(MASK*DY));
-//         
-//         
-//     
-//         array edge = af::hypot(mask_dx,mask_dy);
-// //edge = shift(edge,-edge.dims(0)/4,-edge.dims(1)/4);
-// //    ccor_line /= float(ccor_line.dims(0))*float(ccor_line.dims(1));
-//     unsigned int l = mask.dims(0)/2*(2 - 1);
-//     unsigned int h = mask.dims(0)/2*(2 + 1) -1;
-//     //return 
-//     return edge(seq(l,h),seq(l,h));
-//     }
-// }
 
 af::array generate_edge(const af::array &disk, float smooth) {
      af::array gKerr,dx,dy;  
