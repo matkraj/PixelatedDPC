@@ -4,6 +4,8 @@ GPU accelerated analysis of disk image position in pixelated STEM data with subp
 This code was developped for magnetic imaging in scanning transmission electron microscopy with fast pixelated detectors. It is based on a gradient cross-correlation with a mask pattern. The mask can be created automatically from the dataset or input  manually by a user. It was tested with datasets larger than 100GB. Any modern gaming computer should be suitable. The research is described in [paper (free access)](https://doi.org/10.1016/j.ultramic.2016.03.006) and  [thesis](http://theses.gla.ac.uk/7906/). If you use Pixelated DPC in your research, we kindly ask that you cite the following paper: 
 > Krajnak, Matus, et al. "Pixelated detectors and improved efficiency for magnetic imaging in STEM differential phase contrast." Ultramicroscopy 165 (2016): 42-50.
 
+(tba: step by step guide)
+
 ##### Requirements: 
 
 1. Linux operating system with modern GPU and CUDA/openCL drivers, build system and cmake
