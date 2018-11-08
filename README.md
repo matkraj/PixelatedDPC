@@ -42,4 +42,4 @@ $ ./pixDPC -b binaryFILE -o outputDIR -d 256 -x 512 -y 512 -e 384 -f 0 -a 16 -p 
 - Code supports 8/16/32-bit binary streams. 
 - Tested with datasets from Medipix3 (MerlinEM) and EMPAD detectors
 - Switch for signed and unsigned images and a change of endian architecture 
-- Code should be possible to run on Windows, but endian swap is defined by gcc __builtin_bswap in https://github.com/matkraj/pixelatedDPC/blob/6e1e7ecebf6402fe40acad372c0e29eaee138f3a/src/dpc_support.cpp#L565 (there might be other linux specific parts)
+- Code should be possible to run on Windows, but endian swap is defined by gcc __builtin_bswap in  [dpc_support.cpp](https://github.com/matkraj/pixelatedDPC/blob/6e1e7ecebf6402fe40acad372c0e29eaee138f3a/src/dpc_support.cpp#L565) (there might be other linux specific parts)
