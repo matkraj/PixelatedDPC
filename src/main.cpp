@@ -22,7 +22,7 @@ using namespace af;
 int main(int argc, char** argv ) {
     //program info
     showCreator();
-    //create and check a struct for setup of s - everything can be passed to functions (defined in dpc_support.h/.cpp)
+    //create and check a struct s - everything can be passed to functions (defined in dpc_support.h/.cpp)
     DefaultVals s; 
     //set the important variables by passing onto function from dpc_support.cpp and check the basics for running the analysis
     setDefaultSettings(s);    
