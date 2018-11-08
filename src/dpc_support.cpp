@@ -1021,7 +1021,7 @@ int compute(ifstream& fs, DefaultVals &s, Results &results, af::Window& myWindow
         
         s.frame_i+=s.STEP;
         
-        // do some estimation for finishing time (hopefully better than windows LOL)
+        // do some estimation for finishing time (hopefully better than windows)
         float perc = 100.0*(float(s.frame_i)/float(s.SCAN_XY));
         float dt = timer::stop(s.start);
         float framerate = s.STEP /  (dt - deltaT);

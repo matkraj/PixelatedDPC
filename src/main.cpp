@@ -102,7 +102,7 @@ int main(int argc, char** argv ) {
                 s.leftovers = s.SCAN_XY % s.STEP;
                 af::deviceGC();
                 cout << "\nAF error 101 or 998: device run out of memory\n";
-                cout << "trying with parralel frames halved to: " << s.STEP << endl << endl;
+                cout << "Trying with parralel frames halved to: " << s.STEP << endl << endl;
             } else {
                 //other error should just complain and not run compute
                 std::cerr << ae.what() << std::endl;
