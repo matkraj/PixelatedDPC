@@ -960,6 +960,7 @@ af::array mask_Edge(DefaultVals &s) {
 
 int compute(ifstream& fs, DefaultVals &s, Results &results, af::Window& myWindow, bool end) {
     af::array ar_line, edge_line, diskmask, ccor_line, subs;
+    float deltaT = 1.0;
     while (s.frame_i < s.SCAN_XY - s.leftovers || end) {  
         //this is sort of a funky way but end needs to be set true only once before the
         //calculation of leftovers and immediatelly switched back so while case stops
@@ -1020,11 +1021,13 @@ int compute(ifstream& fs, DefaultVals &s, Results &results, af::Window& myWindow
         
         s.frame_i+=s.STEP;
         
-        //do some estimation for finishing time (hopefully better than windows)
+        // do some estimation for finishing time (hopefully better than windows LOL)
         float perc = 100.0*(float(s.frame_i)/float(s.SCAN_XY));
         float dt = timer::stop(s.start);
+        float framerate = s.STEP /  (dt - deltaT);
+        deltaT = dt;
         dt = dt / perc * 100.0 - dt;
-        cout << "\r"<< roundFloat(perc) << "% \t finishing in ~ "  << roundFloat(dt) << " s       ";
+        cout << "\r"<< roundFloat(perc) << "%      \t finishing in ~ "  << roundFloat(dt) << " s     \t" << roundFloat(framerate) << " fps      " << s.frame_i << " done out of " << s.SCAN_XY << "        ";
         
         //tidy up
         af::deviceGC();

@@ -111,7 +111,10 @@ int main(int argc, char** argv ) {
         }
     }
 
-    cout << "\rElapsed seconds: " << roundFloat(timer::stop()) << " s"<<endl;
+    float finito = timer::stop();
+    cout << endl;
+    printf("\relapsed seconds: %g \n", roundFloat(finito));
+    cout << "average fps " << roundFloat(s.SCAN_XY / finito) << endl<<endl;
 
     //check if the directory exists and if yes add 0 at the end to avoid the loss of data. When created, chdir into it
     while (DirectoryExists(s.dirname.c_str())) s.dirname+="0";
