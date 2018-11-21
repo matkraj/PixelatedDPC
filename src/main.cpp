@@ -22,7 +22,6 @@ using namespace af;
 int main(int argc, char** argv ) {
     //program info
     
-    af::Window lala;
     showCreator();
     //create and check a struct s - everything can be passed to functions (defined in dpc_support.h/.cpp)
     DefaultVals s; 
