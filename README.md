@@ -14,9 +14,9 @@ This code was developped for magnetic imaging in scanning transmission electron 
 ##### Pixelated DPC Installation:
 
 ```bash
-$ cd "downloaded_files/src/
-$ mkdir build
-$ cd build
+$ git clone https://github.com/matkraj/pixelatedDPC.git
+$ cd "pixelatedDPC/src/
+$ mkdir build && cd build
 $ cmake ..
 $ make
 ```
