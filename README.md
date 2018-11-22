@@ -23,7 +23,7 @@ $ make
 ##### Usage:
 Help file describing all analysis settings:
 ```bash
-$ cd "downloaded_files/src/build/"
+$ cd build
 $ ./pixDPC -h
 ```
 Simple example
