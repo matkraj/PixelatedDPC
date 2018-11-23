@@ -8,7 +8,7 @@ This code was developped for magnetic imaging in scanning transmission electron 
 
 ##### Requirements: 
 
-1. Linux operating system with modern GPU and CUDA/openCL drivers, build system and cmake
+1. Linux operating system with modern GPU and CUDA/OpenCL drivers, build system and cmake
 2. Arrayfire library https://arrayfire.com/ (installation guide http://arrayfire.org/docs/installing.htm)
 
 ##### Pixelated DPC Installation:
