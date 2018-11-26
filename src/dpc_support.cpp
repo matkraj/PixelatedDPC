@@ -50,7 +50,8 @@ void showhelpinfo(){
   cout<<"         "<<"-d  [N], size of square detector (256)"<<endl;
   cout<<"         "<<"-z  [N], zero padding in multiples of detector size -d (2)"<<endl;
   cout<<"         "<<"-c  [f], downscale, use 2 to halve the detector size for speed -c >=1.0 (1.0)"<<endl<<endl;
-  
+
+
   cout<<endl<<"         ===========Minimal example usage (Medipix3, 257x256 scan)===========\n         $ ./pixDPC -b bin_file"<<endl;
 }
 
@@ -620,6 +621,9 @@ array readDiskLine(ifstream& fs, const DefaultVals &s) {
     char *tmp0 = new char [LENGTH];
     fs.read((char*)tmp0, LENGTH);
 
+    
+    //printf( "Here: %p\n" , tmp0 );
+
     // 16-bit or 32-bit endian correction
     if (s.endian) endianSwap(s, LENGTH, tmp0);
   
@@ -720,7 +724,6 @@ void check_s(DefaultVals &s) {
 
     s.SCAN_XY        = s.SCAN_X * s.SCAN_Y;
     s.bytedepth      = s.bitdepth / 8;
-    cout << "\nbytedepth = "<<s.bytedepth<<endl;
     s.BYTESIZE_DET   = s.bytedepth * s.SIZE_DET * s.SIZE_DET;
     //read data by for loop one s.STEP at a time
     s.leftovers = s.SCAN_XY % s.STEP;
@@ -782,7 +785,7 @@ af::array partialConvolve(const DefaultVals &s, const af::array &edge_line) //do
 	ccor_line = shift(ccor_line,ccor_line.dims(0)/2,ccor_line.dims(1)/2);
     unsigned int l = edge_line.dims(0)/2*(s.ZEROPAD - 1);
     unsigned int h = edge_line.dims(1)/2*(s.ZEROPAD + 1) -1;
-    return ccor_line(seq(l,h),seq(l,h));
+    return ccor_line(seq(l,h),seq(l,h))/float(ccor_line.dims(0))/float(ccor_line.dims(1))*s.ZEROPAD*s.ZEROPAD;
 }
 
 
@@ -844,6 +847,7 @@ void data_check(ifstream& fs, const DefaultVals &s) {
 
 	ulong filesize = fs.tellg();
     
+    cout << "\nbytedepth = "<<s.bytedepth<<endl;
     cout << "header = " << s.HEADERSIZE << endl;
     cout << "footer = " << s.FOOTERSIZE << endl;
     cout << "detector = " << s.BYTESIZE_DET << endl;
@@ -987,7 +991,7 @@ int compute(ifstream& fs, DefaultVals &s, Results &results, af::Window& myWindow
         edge_line = af::tile(diskmask,1,1,edge_line.dims(2)) * edge_line;
     
         //create cross-correlation pattern by phase convolution - s.Edge was pre-FFT-ed to save one FFT operation per cycle
-        edge_line = af::medfilt(edge_line);
+        //edge_line = af::medfilt(edge_line);
         normalizeCCinPlace(edge_line);
         ccor_line = partialConvolve(s,edge_line);           
 
@@ -1152,7 +1156,7 @@ int getSettings(DefaultVals &s, int argc, char** argv) {
                 break;
             case 'l':
                 s.sign=true; 
-                break;
+                break;            
             case 's':
                 s.sigma =  atof(optarg);
                 break;            

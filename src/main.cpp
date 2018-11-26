@@ -40,7 +40,7 @@ int main(int argc, char** argv ) {
     check_s(s);
     
     //tell what compute engine is selected by arrayfire
-    cout << "\n"; af::info(); cout << "\n";
+    cout << "\nComputation engine info:\n"; af::info(); cout << "\n";
 
     
     //OPEN BIG BINARY FILE FOR ANALYSIS - open at the end for filelength check
