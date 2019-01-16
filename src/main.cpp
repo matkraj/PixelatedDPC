@@ -42,7 +42,6 @@ int main(int argc, char** argv ) {
     //tell what compute engine is selected by arrayfire
     cout << "\nComputation engine info:\n"; af::info(); cout << "\n";
 
-    
     //OPEN BIG BINARY FILE FOR ANALYSIS - open at the end for filelength check
     ifstream fs;
     fs.open(s.binfile.c_str(), ios::out | ios::binary | ios::ate);
@@ -114,7 +113,7 @@ int main(int argc, char** argv ) {
 
     float finito = timer::stop();
     cout << endl;
-    printf("\relapsed seconds: %g \n", roundFloat(finito));
+    cout << "\relapsed seconds: " << roundFloat(finito) << endl;
     cout << "average fps " << roundFloat(s.SCAN_XY / finito) << endl<<endl;
 
     //check if the directory exists and if yes add 0 at the end to avoid the loss of data. When created, chdir into it

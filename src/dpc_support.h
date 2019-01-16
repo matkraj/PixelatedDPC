@@ -72,6 +72,7 @@ af::array downscale(const DefaultVals &s,const af::array &ar_line_small);
 void gotHere();
 void visualise_calc(DefaultVals &s, Results &results, af::Window& myWindow, const af::array &disk, const af::array &edge, const af::array &ccor, long indL, long indH);
 
+
 // function acting on simulation setup
 void data_check(std::ifstream& fs, const DefaultVals &s);
 void generate_outputs(const DefaultVals &s,Results &calcs);

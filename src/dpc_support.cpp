@@ -225,7 +225,6 @@ af::array max_thr_correlate(const af::array &in,const af::array &diskmed) {
     unsigned long bins = in.dims(2);
     unsigned long step = 32;
     unsigned long count = 0;
-    
     while (count < bins) {
         //generate edges
         disk_test = generate_edge(in(seq(),seq(),seq(count,count+step-1)));
@@ -671,13 +670,12 @@ af::array generate_edge(DefaultVals s, af::array mask) {
 }
 
 af::array generate_edge(const af::array &disk, float smooth) {
-     af::array gKerr,dx,dy;  
-     unsigned int scale = 2;
+     af::array gKerr,dx,dy,mask_dx,mask_dy,edge;  
      gKerr = af::gaussianKernel(disk.dims(0), disk.dims(1),smooth,smooth);
-     grad(dx,dy,gKerr);     
-     af::array mask_dx = fftConvolve2(dx,disk,AF_CONV_DEFAULT);
-     af::array mask_dy = fftConvolve2(dy,disk,AF_CONV_DEFAULT);
-     af::array edge = af::hypot(mask_dx,mask_dy);
+     grad(dx,dy,gKerr);    
+     mask_dx = af::fftConvolve2(dx,disk.as(f32),AF_CONV_DEFAULT);
+     mask_dy = af::fftConvolve2(dy,disk.as(f32),AF_CONV_DEFAULT);
+     edge = af::hypot(mask_dx,mask_dy);
      
      af::deviceGC();
 
@@ -891,37 +889,38 @@ void visualise_calc(DefaultVals &s, Results &results, af::Window& myWindow, cons
     e = results.dpcx.as(f32);
     e = normaliseViewRange1D(e,indH);
     e = af::moddims(e,s.SCAN_X,s.SCAN_Y);
-    e = rotate(e,-M_PI/2.0f),false;
+    e = rotate(e,-M_PI/2.0f,false);
 
     f = results.dpcy.as(f32);
     f = normaliseViewRange1D(f,indH);
     f = af::moddims(f,s.SCAN_X,s.SCAN_Y);
-    f = rotate(f,-M_PI/2.0f),false;
+    f = rotate(f,-M_PI/2.0f,false);
     
     g = results.maxs.as(f32);
     g = normaliseViewRange1D(g,indH);
     g = af::moddims(g,s.SCAN_X,s.SCAN_Y);
-    g = rotate(g,-M_PI/2.0f),false;
+    g = rotate(g,-M_PI/2.0f,false);
     
     h = sqrt((e-0.5)*(e-0.5) + (f-0.5)*(f-0.5));
-    h = normaliseViewRange1D(h,indH);
-    h = af::moddims(h,s.SCAN_X,s.SCAN_Y);
+    h = normaliseViewRange1D(h,indH);       
     
-    
-    visualisation_window(a,
+    visualisation_window(
+                a,
                 normaliseView(disk),
                 normaliseView(edge),
                 normaliseView(ccor),
-                e,f,g,h,
+                e,
+                f,
+                g,
+                h,
                 myWindow);
 }
-
 
 af::array autoMask(ifstream& fs, DefaultVals &s) {
     timer::start();
     //arrays to store edges and disk
     af::array edges,disks;
-    
+
     //create window
     af::Window WinAuto(3*256,32 + 256,"disk AUTO mask");
     WinAuto.grid(1,3);
@@ -1034,13 +1033,14 @@ int compute(ifstream& fs, DefaultVals &s, Results &results, af::Window& myWindow
         cout << "\r"<< roundFloat(perc) << "%      \t finishing in ~ "  << roundFloat(dt) << " s     \t" << roundFloat(framerate) << " fps      " << s.frame_i << " done out of " << s.SCAN_XY << "        ";
         
         //tidy up
-        af::deviceGC();
+        //af::deviceGC();
+    //allow for termination by closing the window - if opened
     if (s.show and myWindow.close()) {
         cout << "\r=== CALCULATION TERMINATED === " << endl; 
         exit(1);
     }
-    //allow for termination by closing the window - if opened
     }
+
 }
 
 
@@ -1261,12 +1261,12 @@ void saveimages(const DefaultVals &s, Results calcs) {
 	saveImageNative("./16bit_sum.png",calcs.sums.as(u16));
     
 	//CREATING PREVIEW AND SHOWING IT STRAIGHT AFTER FINISHED
-	array fehViewT = join(1,calcs.maxs.as(u16),calcs.sums.as(u16));
-	array fehViewB = join(1,calcs.dpcx.as(u16),calcs.dpcy.as(u16));
-	array fehView  = join(0,fehViewT,fehViewB);
-    
-	saveImageNative("./fehPreView.tif",fehView);
-	system("feh ./fehPreView.tif &");
+// 	array fehViewT = join(1,calcs.maxs.as(u16),calcs.sums.as(u16));
+// 	array fehViewB = join(1,calcs.dpcx.as(u16),calcs.dpcy.as(u16));
+// 	array fehView  = join(0,fehViewT,fehViewB);
+//     
+// 	saveImageNative("./fehPreView.tif",fehView);
+// 	system("feh ./fehPreView.tif &");
     
     chdir("..");
     cout << "Data saved to DIR = " << s.dirname << endl << endl;
