@@ -1107,7 +1107,7 @@ void createLogFile(const DefaultVals &s) {
 
 int getSettings(DefaultVals &s, int argc, char** argv) {
     //this looks bad but it is simple
-    while ((s.ind = getopt (argc, argv, "S:N:M:c:O:T:m:e:b:p:o:x:y:z:a:d:s:t:u:hwlgfAF")) != -1)
+    while ((s.ind = getopt (argc, argv, "S:N:M:c:O:T:m:e:b:p:o:x:y:z:a:d:s:t:u:hwlgf:AF")) != -1)
         switch (s.ind) {
             case 'h':
                 showhelpinfo();
