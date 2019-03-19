@@ -21,8 +21,9 @@ using namespace af;
 //main function
 int main(int argc, char** argv ) {
     //program info
-    
     showCreator();
+    //computing engine
+    cout << "\n"; af::info();
     //create and check a struct s - everything can be passed to functions (defined in dpc_support.h/.cpp)
     DefaultVals s; 
     //set the important variables by passing onto function from dpc_support.cpp and check the basics for running the analysis
